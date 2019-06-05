@@ -1,0 +1,11 @@
+name: stockmarket
+channels:
+  - defaults
+dependencies:
+  - python=3.6
+  - requests
+  - click
+  - pip:
+    - tensorflow==1.13.1
+    - keras==2.2.4
+    - mlflow==1.0

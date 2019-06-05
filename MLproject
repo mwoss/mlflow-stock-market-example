@@ -1,0 +1,28 @@
+name: stock_market_prediction_poc
+
+conda_env: conda.yaml
+
+entry_points:
+  download_raw_data:
+    parameters:
+      company_name: {type: string, default: WIKI}
+      dataset_name: {type: string, default: AAPL}
+    command: "python download_raw_data.py --company-name {company_name} --dataset-name {dataset_name}"
+
+  transform_data:
+    parameters:
+      stock_csv: path
+      max_row_limit: {type: int, default: 100000}
+    command: "python transform_data.py --stock-csv {stock-csv} --max-row-limit {max_row_limit}"
+
+  train_keras:
+    parameters:
+      stock_data: path
+      hidden_units: {type: int, default: 20}
+    command: "python train_keras.py --stock-data {stock_data} --hidden-units {hidden_units}"
+
+  main:
+    parameters:
+      keras_hidden_units: {type: int, default: 20}
+      max_row_limit: {type: int, default: 100000}
+    command: "python main.py --als-max-iter {als_max_iter} --keras-hidden-units {keras_hidden_units}
