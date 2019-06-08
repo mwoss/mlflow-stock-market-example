@@ -15,14 +15,14 @@ entry_points:
       max_row_limit: {type: int, default: 100000}
     command: "python transform_data.py --stock-csv {stock-csv} --max-row-limit {max_row_limit}"
 
-  train_keras:
+  train_model:
     parameters:
       stock_data: path
       lstm_units: {type: int, default: 50}
-    command: "python train_keras.py --stock-data {stock_data} --lstm-units {lstm_units}"
+    command: "python train_model.py --stock-data {stock_data} --lstm-units {lstm_units}"
 
   main:
     parameters:
-      keras_hidden_units: {type: int, default: 20}
+      lstm_units: {type: int, default: 50}
       max_row_limit: {type: int, default: 100000}
-    command: "python main.py --als-max-iter {als_max_iter} --keras-hidden-units {keras_hidden_units}
+    command: "python main.py --lstm-units {lstm_units} --max-row-limit {max_row_limit}

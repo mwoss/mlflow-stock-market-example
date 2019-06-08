@@ -50,10 +50,10 @@ def prepare_test_data(inputs: pd.DataFrame, left_train_bound: int) -> np.ndarray
 
 
 @click.command(help="Train LSTM Network using transformed data")
-@click.option("--ratings-data", type=str)
+@click.option("--stock-data", type=str)
 @click.option("--lstm-units", type=int, default=50)
-def train_model(ratings_data, lstm_units):
-    lstm_data = pd.read_csv(ratings_data)
+def train_model(stock_data, lstm_units):
+    lstm_data = pd.read_csv(stock_data)
     scalar = MinMaxScaler(feature_range=(0, 1))
     scaled_data = scalar.fit_transform(lstm_data)
 
