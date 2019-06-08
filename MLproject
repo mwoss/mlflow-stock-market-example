@@ -18,8 +18,8 @@ entry_points:
   train_keras:
     parameters:
       stock_data: path
-      hidden_units: {type: int, default: 20}
-    command: "python train_keras.py --stock-data {stock_data} --hidden-units {hidden_units}"
+      lstm_units: {type: int, default: 50}
+    command: "python train_keras.py --stock-data {stock_data} --lstm-units {lstm_units}"
 
   main:
     parameters:

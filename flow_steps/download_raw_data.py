@@ -1,9 +1,10 @@
-import click
 import csv
+from os import path
+from tempfile import mkdtemp as create_tmp_dir
+
+import click
 import mlflow
 import requests
-import tempfile
-from os import path
 
 QUANLD_API = "https://www.quandl.com/api/v3/datasets"
 
@@ -14,8 +15,8 @@ QUANLD_API = "https://www.quandl.com/api/v3/datasets"
 def download_csv(company_name: str, dateset_name: str):
     dataset_url = f"{QUANLD_API}/{company_name}/{dateset_name}"
 
-    with mlflow.start_run() as mlrun:
-        local_dir = tempfile.mkdtemp()
+    with mlflow.start_run():
+        local_dir = create_tmp_dir()
         local_filename = path.join(local_dir, "dataset-market.csv")
         print(f"Downloading {dataset_url} to {local_filename}")
 
@@ -27,11 +28,10 @@ def download_csv(company_name: str, dateset_name: str):
             for line in decoded_content:
                 columns = line.split(",")
                 writer.writerow(columns)
-        
+
         print(f"Uploading stock market data: {local_filename}")
         mlflow.log_artifact(local_filename, "dataset-stock-dir")
 
 
 if __name__ == '__main__':
     download_csv()
-    
