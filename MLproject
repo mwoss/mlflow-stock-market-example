@@ -5,9 +5,8 @@ conda_env: conda.yaml
 entry_points:
   download_raw_data:
     parameters:
-      company_name: {type: string, default: WIKI}
-      dataset_name: {type: string, default: AAPL}
-    command: "python download_raw_data.py --company-name {company_name} --dataset-name {dataset_name}"
+      company_abbreviation: {type: string, default: MSFT}
+    command: "python download_raw_data.py --company-abbreviation {company_abbreviation}"
 
   transform_data:
     parameters:

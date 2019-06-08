@@ -56,21 +56,20 @@ def _get_or_run(entrypoint, parameters, git_commit, use_cache=True):
 
 
 @click.command("Run entire flow, from downloading data to training model")
-@click.option("--company-name", type=str, default="WIKI")
-@click.option("--dataset-name", type=str, type="AAPL")
+@click.option("--company-abbreviation", type=str, type="MSFT")
 @click.option("--lstm-units", type=int, default=50)
 @click.option("--max-row-limit", type=int, default=100000)
-def workflow(company_name, dataset_name, lstm_units, max_row_limit):
+def workflow(company_abbreviation, lstm_units, max_row_limit):
     with mlflow.start_run() as active_run:
         git_commit = active_run.data.tags.get(mlflow_tags.MLFLOW_GIT_COMMIT)
         download_raw_data_run = _get_or_run("download_raw_data",
-                                            {"company_name": company_name, "dataset_name": dataset_name},
+                                            {"company_abbreviation": company_abbreviation},
                                             git_commit)
 
         dataset_stock_dir = path.join(download_raw_data_run.info.artifact_uri, "dataset-stock-dir")
         transform_data_run = _get_or_run("transform_data",
-                                   {"dataset_stock_dir": dataset_stock_dir, "max_row_limit": max_row_limit},
-                                   git_commit)
+                                         {"dataset_stock_dir": dataset_stock_dir, "max_row_limit": max_row_limit},
+                                         git_commit)
         transformed_dataset_dir = path.join(transform_data_run.info.artifact_uri, "transformed-dataset-dir")
 
         _get_or_run("train_model",
