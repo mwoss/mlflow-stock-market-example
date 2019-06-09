@@ -1,4 +1,4 @@
-from os import path
+from os import path, mkdir
 from tempfile import mkdtemp as create_tmp_dir
 
 import click
@@ -18,15 +18,19 @@ def process_dataframe(df):
 
 @click.command(help="Transform given CSV file. Strip unused columns and convert rest of data. "
                     "Transforms it into Parquet in an mlflow artifact called 'market-transformed-dir'")
-@click.option("--dataset-stock-dir", type=str)
+@click.option("--dataset-stock-csv", type=str)
 @click.option("--max-row-limit", type=int, default=10000, help="Limit the data size to run comfortably on slower pcs.")
-def transform_data(dataset_stock_dir, max_row_limit):
+def transform_data(dataset_stock_csv, max_row_limit):
     with mlflow.start_run():
         tmpdir = create_tmp_dir()
         transformed_dataset_dir = path.join(tmpdir, 'stock-dataset')
-        print(f"Converting stock market data CSV {dataset_stock_dir}. Output: {transformed_dataset_dir}")
 
-        df = pd.read_csv(dataset_stock_dir)
+        if not path.exists(transformed_dataset_dir):
+            mkdir(transformed_dataset_dir)
+
+        print(f"Converting stock market data CSV {dataset_stock_csv}. Output: {transformed_dataset_dir}")
+
+        df = pd.read_csv(dataset_stock_csv)
         lstm_data = process_dataframe(df)
         lstm_data.index = lstm_data.Date
         lstm_data.drop('Date', axis=1, inplace=True)

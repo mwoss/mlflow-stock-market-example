@@ -1,27 +1,27 @@
 name: stock_market_prediction_poc
 
-conda_env: conda.yaml
+conda_env: conda.yml
 
 entry_points:
   download_raw_data:
     parameters:
       company_abbreviation: {type: string, default: MSFT}
-    command: "python download_raw_data.py --company-abbreviation {company_abbreviation}"
+    command: "python flow_steps/download_raw_data.py --company-abbreviation {company_abbreviation}"
 
   transform_data:
     parameters:
-      stock_csv: path
+      dataset_stock_csv: path
       max_row_limit: {type: int, default: 100000}
-    command: "python transform_data.py --stock-csv {stock-csv} --max-row-limit {max_row_limit}"
+    command: "python flow_steps/transform_data.py --dataset-stock-csv {dataset_stock_csv} --max-row-limit {max_row_limit}"
 
   train_model:
     parameters:
       stock_data: path
       lstm_units: {type: int, default: 50}
-    command: "python train_model.py --stock-data {stock_data} --lstm-units {lstm_units}"
+    command: "python flow_steps/train_model.py --stock-data {stock_data} --lstm-units {lstm_units}"
 
   main:
     parameters:
       lstm_units: {type: int, default: 50}
       max_row_limit: {type: int, default: 100000}
-    command: "python main.py --lstm-units {lstm_units} --max-row-limit {max_row_limit}
+    command: "python main.py --lstm-units {lstm_units} --max-row-limit {max_row_limit}"

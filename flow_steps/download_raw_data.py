@@ -12,7 +12,7 @@ QUANLD_API = "https://www.quandl.com/api/v3/datasets/WIKI"
 @click.command(help="Downloads the stock market dataset for given company. Saves it as an mlflow artifact")
 @click.option("--company-abbreviation", type=str)
 def download_csv(company_abbreviation: str):
-    dataset_url = f"{QUANLD_API}/{company_abbreviation}"
+    dataset_url = f"{QUANLD_API}/{company_abbreviation}.csv"
 
     with mlflow.start_run():
         local_dir = create_tmp_dir()
