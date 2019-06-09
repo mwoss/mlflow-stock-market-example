@@ -7,6 +7,8 @@ from keras.models import Sequential
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 
+from flow_steps.constants import TRAIN_ROWS_METRIC, TEST_ROWS_METRIC, RMS_METRIC, MODEL_ARTIFACT_NAME
+
 
 class LSTMNet:
     @staticmethod
@@ -63,8 +65,8 @@ def train_model(stock_data, lstm_units):
 
         x_train, y_train = prepare_train_data(train_data, scaled_data, left_train_bound)
 
-        mlflow.log_metric("training_nrows", train_data.count())
-        mlflow.log_metric("test_nrows", test_data.count())
+        mlflow.log_metric(TRAIN_ROWS_METRIC, float(train_data.shape[0]))
+        mlflow.log_metric(TEST_ROWS_METRIC, float(test_data.shape[0]))
 
         height = x_train.shape[1]
         model = LSTMNet.build(height, lstm_units)
@@ -79,10 +81,10 @@ def train_model(stock_data, lstm_units):
         predictions = model.predict(x_test)
         predictions = scalar.inverse_transform(predictions)
         r_mean_square = root_square_mean(test_data, predictions)
-        mlflow.log_metric("train_rms", r_mean_square)
+        mlflow.log_metric(RMS_METRIC, r_mean_square)
 
         print(f"The model had a RMS on the test set of {r_mean_square}")
-        mlflow.keras.log_model(model, "keras-model")
+        mlflow.keras.log_model(model, MODEL_ARTIFACT_NAME)
 
 
 if __name__ == '__main__':

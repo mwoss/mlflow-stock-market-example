@@ -7,6 +7,9 @@ from mlflow.tracking.fluent import _get_experiment_id
 from mlflow.utils import mlflow_tags
 from mlflow.utils.logging_utils import eprint
 
+from flow_steps.constants import DOWNLOAD_STEP, TRANSFORM_STEP, TRAIN_STEP, DATASET_ARTIFACT_DIR, DATASET_NAME, \
+    TRANSFORMED_ARTIFACT_DIR, TRANSFORMED_DATASET_NAME
+
 
 def _already_ran(entry_point_name, parameters, git_commit, experiment_id=None):
     """Best-effort detection of if a run with the given entrypoint name,
@@ -62,18 +65,20 @@ def _get_or_run(entrypoint, parameters, git_commit, use_cache=True):
 def workflow(company_abbreviation, lstm_units, max_row_limit):
     with mlflow.start_run() as active_run:
         git_commit = active_run.data.tags.get(mlflow_tags.MLFLOW_GIT_COMMIT)
-        download_data_run = _get_or_run("download_raw_data",
+        download_data_run = _get_or_run(DOWNLOAD_STEP,
                                         {"company_abbreviation": company_abbreviation},
                                         git_commit)
 
-        dataset_stock_csv = path.join(download_data_run.info.artifact_uri, "dataset-stock-dir", "dataset-market.csv")
-        transform_data_run = _get_or_run("transform_data",
+        dataset_stock_csv = path.join(download_data_run.info.artifact_uri,
+                                      DATASET_ARTIFACT_DIR, DATASET_NAME)
+        transform_data_run = _get_or_run(TRANSFORM_STEP,
                                          {"dataset_stock_csv": dataset_stock_csv, "max_row_limit": max_row_limit},
                                          git_commit)
-        transformed_dataset_dir = path.join(transform_data_run.info.artifact_uri, "transformed-dataset-dir")
 
-        _get_or_run("train_model",
-                    {"stock_data": transformed_dataset_dir, "hidden_units": lstm_units},
+        transformed_dataset_dir = path.join(transform_data_run.info.artifact_uri,
+                                            TRANSFORMED_ARTIFACT_DIR, TRANSFORMED_DATASET_NAME)
+        _get_or_run(TRAIN_STEP,
+                    {"stock_data": transformed_dataset_dir, "lstm_units": lstm_units},
                     git_commit,
                     use_cache=False)
 

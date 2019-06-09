@@ -5,6 +5,8 @@ import click
 import mlflow
 import pandas as pd
 
+from flow_steps.constants import TRANSFORMED_ARTIFACT_DIR, TRANSFORMED_DATASET_NAME
+
 
 def process_dataframe(df):
     data = df.sort_index(ascending=True, axis=0)
@@ -23,12 +25,9 @@ def process_dataframe(df):
 def transform_data(dataset_stock_csv, max_row_limit):
     with mlflow.start_run():
         tmpdir = create_tmp_dir()
-        transformed_dataset_dir = path.join(tmpdir, 'stock-dataset')
+        transformed_dataset_file = path.join(tmpdir, TRANSFORMED_DATASET_NAME)
 
-        if not path.exists(transformed_dataset_dir):
-            mkdir(transformed_dataset_dir)
-
-        print(f"Converting stock market data CSV {dataset_stock_csv}. Output: {transformed_dataset_dir}")
+        print(f"Converting stock market data CSV {dataset_stock_csv}. Output: {transformed_dataset_file}")
 
         df = pd.read_csv(dataset_stock_csv)
         lstm_data = process_dataframe(df)
@@ -38,10 +37,10 @@ def transform_data(dataset_stock_csv, max_row_limit):
         if max_row_limit != -1:
             lstm_data = lstm_data[:max_row_limit]
 
-        lstm_data.to_csv(path.join(transformed_dataset_dir, "transformed-dataset-dir.csv"), index=None, header=True)
+        lstm_data.to_csv(transformed_dataset_file, index=None, header=True)
 
-        print(f"Uploading transformed dataset: {transformed_dataset_dir}")
-        mlflow.log_artifacts(transformed_dataset_dir, "transformed-dataset-dir")
+        print(f"Uploading transformed dataset: {transformed_dataset_file}")
+        mlflow.log_artifacts(transformed_dataset_file, TRANSFORMED_ARTIFACT_DIR)
 
 
 if __name__ == '__main__':
