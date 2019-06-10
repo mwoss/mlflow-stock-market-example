@@ -7,8 +7,8 @@ from mlflow.tracking.fluent import _get_experiment_id
 from mlflow.utils import mlflow_tags
 from mlflow.utils.logging_utils import eprint
 
-from flow_steps.constants import DOWNLOAD_STEP, TRANSFORM_STEP, TRAIN_STEP, DATASET_ARTIFACT_DIR, DATASET_NAME, \
-    TRANSFORMED_ARTIFACT_DIR, TRANSFORMED_DATASET_NAME
+from flow_steps.constants import (DOWNLOAD_STEP, TRANSFORM_STEP, TRAIN_STEP, DATASET_ARTIFACT_DIR, DATASET_NAME,
+                                  TRANSFORMED_ARTIFACT_DIR, TRANSFORMED_DATASET_NAME)
 
 
 def _already_ran(entry_point_name, parameters, git_commit, experiment_id=None):

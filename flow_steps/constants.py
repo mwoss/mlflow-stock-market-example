@@ -4,6 +4,7 @@ QUANLD_API = "https://www.quandl.com/api/v3/datasets/WIKI"
 TRAIN_ROWS_METRIC = "training_nrows"
 TEST_ROWS_METRIC = "test_nrows"
 RMS_METRIC = "train_rms"
+LOSS_METRIC = "train_loss"
 
 # ARTIFACTS
 DATASET_ARTIFACT_DIR = "dataset-stock-dir"

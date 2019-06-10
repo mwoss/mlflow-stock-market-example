@@ -7,7 +7,7 @@ from keras.models import Sequential
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 
-from flow_steps.constants import TRAIN_ROWS_METRIC, TEST_ROWS_METRIC, RMS_METRIC, MODEL_ARTIFACT_NAME
+from constants import LOSS_METRIC, TRAIN_ROWS_METRIC, TEST_ROWS_METRIC, RMS_METRIC, MODEL_ARTIFACT_NAME
 
 
 class LSTMNet:
@@ -71,7 +71,9 @@ def train_model(stock_data, lstm_units):
         height = x_train.shape[1]
         model = LSTMNet.build(height, lstm_units)
         model.compile(loss='mean_squared_error', optimizer='adam', metrics=['accuracy'])
-        model.fit(x_train, y_train, epochs=1, batch_size=1, verbose=2)
+        history = model.fit(x_train, y_train, epochs=1, batch_size=1, verbose=1)
+
+        mlflow.log_metric(LOSS_METRIC, history.history["loss"][0])
 
         inputs = lstm_data[len(lstm_data) - len(test_data) - left_train_bound:].values
         inputs = inputs.reshape(-1, 1)

@@ -6,7 +6,7 @@ import click
 import mlflow
 import requests
 
-from flow_steps.constants import DATASET_ARTIFACT_DIR, DATASET_NAME, QUANLD_API
+from constants import DATASET_ARTIFACT_DIR, DATASET_NAME, QUANLD_API
 
 
 @click.command(help="Downloads the stock market dataset for given company. Saves it as an mlflow artifact")

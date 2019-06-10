@@ -13,20 +13,30 @@ ML lifecycle = **(-> raw data -> data preparation -> model training -> deploymen
 MLflow aims to take any codebase written in its format and make it reproducible and reusable by multiple data scientists.  
 
 
-How to run
+Getting started 
 ----
-Running mlflow pipelines is pretty straight forward. Run `mlflow run` command from project directory.
+Running mlflow pipeline is pretty straight forward. Run `mlflow run` command from project directory and that's all.
 Mlflow will execute pipline definied in `MLproject` file.
 
 ```bash
 mlflow run .
 ```
-
 You can compare the results or check your run metrics/artifacts using `mlflow ui`  
-Change run parameters using `-P` attribute, for example:
+Change execution parameters using `-P` attribute, for example:
 
 ```bash
 mlflow run . -P lstm_units=60
 ```
+You can also run whole application using main script, just simply execute main.py
+```bash
+python main.py
+```
+Example overview
+----
 
 
+Notes
+----
+
+* Files placed in flow_steps directory use relative imports due to Mlflow execution logic.
+* PoC is based on mlflow/examples/multistep_workflow exmaple from mlflow repository.
