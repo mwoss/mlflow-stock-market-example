@@ -14,7 +14,7 @@ from constants import DATASET_ARTIFACT_DIR, DATASET_NAME, QUANLD_API
 def download_csv(company_abbreviation: str):
     dataset_url = f"{QUANLD_API}/{company_abbreviation}.csv"
 
-    with mlflow.start_run():
+    with mlflow.start_run(run_name="download"):
         local_dir = create_tmp_dir()
         local_filename = path.join(local_dir, DATASET_NAME)
         print(f"Downloading {dataset_url} to {local_filename}")

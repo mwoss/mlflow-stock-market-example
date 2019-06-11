@@ -7,14 +7,12 @@ from mlflow.tracking.fluent import _get_experiment_id
 from mlflow.utils import mlflow_tags
 from mlflow.utils.logging_utils import eprint
 
-from flow_steps.constants import (DOWNLOAD_STEP, TRANSFORM_STEP, TRAIN_STEP, DATASET_ARTIFACT_DIR, DATASET_NAME,
-                                  TRANSFORMED_ARTIFACT_DIR, TRANSFORMED_DATASET_NAME)
+from flow_steps import constants as const
 
 
 def _already_ran(entry_point_name, parameters, git_commit, experiment_id=None):
-    """Best-effort detection of if a run with the given entrypoint name,
-    parameters, and experiment id already ran. The run must have completed
-    successfully and have at least the parameters provided.
+    """Best-effort detection of if a run with the given parameters already ran.
+    The run must have completed successfully and have at least the parameters provided.
     """
     experiment_id = experiment_id if experiment_id is not None else _get_experiment_id()
     client = mlflow.tracking.MlflowClient()
@@ -62,23 +60,35 @@ def _get_or_run(entrypoint, parameters, git_commit, use_cache=True):
 @click.option("--company-abbreviation", type=str, default="MSFT")
 @click.option("--lstm-units", type=int, default=50)
 @click.option("--max-row-limit", type=int, default=100000)
-def workflow(company_abbreviation, lstm_units, max_row_limit):
+@click.option("--bucket-name", type=str, default="stock-market-models")
+def workflow(company_abbreviation, lstm_units, max_row_limit, bucket_name):
     with mlflow.start_run() as active_run:
         git_commit = active_run.data.tags.get(mlflow_tags.MLFLOW_GIT_COMMIT)
-        download_data_run = _get_or_run(DOWNLOAD_STEP,
+
+        download_data_run = _get_or_run(const.DOWNLOAD_STEP,
                                         {"company_abbreviation": company_abbreviation},
                                         git_commit)
-
         dataset_stock_csv = path.join(download_data_run.info.artifact_uri,
-                                      DATASET_ARTIFACT_DIR, DATASET_NAME)
-        transform_data_run = _get_or_run(TRANSFORM_STEP,
+                                      const.DATASET_ARTIFACT_DIR, const.DATASET_NAME)
+
+        transform_data_run = _get_or_run(const.TRANSFORM_STEP,
                                          {"dataset_stock_csv": dataset_stock_csv, "max_row_limit": max_row_limit},
                                          git_commit)
-
         transformed_dataset_dir = path.join(transform_data_run.info.artifact_uri,
-                                            TRANSFORMED_ARTIFACT_DIR, TRANSFORMED_DATASET_NAME)
-        _get_or_run(TRAIN_STEP,
-                    {"stock_data": transformed_dataset_dir, "lstm_units": lstm_units},
+                                            const.TRANSFORMED_ARTIFACT_DIR, const.TRANSFORMED_DATASET_NAME)
+
+        train_model_run = _get_or_run(const.TRAIN_STEP,
+                                      {"stock_data": transformed_dataset_dir, "lstm_units": lstm_units},
+                                      git_commit,
+                                      use_cache=False)
+        trained_model_dir = path.join(train_model_run.info.artifact_uri,
+                                      const.MODEL_ARTIFACT_PATH,
+                                      "data",
+                                      const.STOCK_MODEL_PATHS,
+                                      const.MODEL_ARTIFACT_NAME)
+
+        _get_or_run(const.DEPLOY_STEP,
+                    {"model_dir": trained_model_dir, "bucket_name": bucket_name},
                     git_commit,
                     use_cache=False)
 

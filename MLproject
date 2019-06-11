@@ -20,8 +20,16 @@ entry_points:
       lstm_units: {type: int, default: 50}
     command: "python flow_steps/train_model.py --stock-data {stock_data} --lstm-units {lstm_units}"
 
+  deploy_model:
+    parameters:
+      model_dir: path
+      bucket_name: {type: string, default: stock-market-models}
+    command: "python flow_steps/deploy_model.py --model-dir {model_dir} --bucket-name {bucket_name}"
+
   main:
     parameters:
       lstm_units: {type: int, default: 50}
       max_row_limit: {type: int, default: 100000}
-    command: "python main.py --lstm-units {lstm_units} --max-row-limit {max_row_limit}"
+      company_abbreviation: {type: string, default: MSFT}
+      bucket_name" {type:string, default: stock-market-models}
+    command: "python main.py --lstm-units {lstm_units} --max-row-limit {max_row_limit} --company-abbreviation {company_abbreviation} --bucket-name {bucket_name}"

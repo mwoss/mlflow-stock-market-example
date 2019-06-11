@@ -23,7 +23,7 @@ def process_dataframe(df):
 @click.option("--dataset-stock-csv", type=str)
 @click.option("--max-row-limit", type=int, default=10000, help="Limit the data size to run comfortably on slower pcs.")
 def transform_data(dataset_stock_csv, max_row_limit):
-    with mlflow.start_run():
+    with mlflow.start_run(run_name="transform"):
         tmpdir = create_tmp_dir()
         transformed_dataset_dir = path.join(tmpdir, "stock-dataset")
 

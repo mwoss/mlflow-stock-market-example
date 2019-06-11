@@ -68,7 +68,7 @@ entry_points:
 
 ```
 
-# `conda.yml` contains requirements for project virtual environment. Mlflow creates venv on its own with given requirements file and run whole multistep flow within it.
+`conda.yml` contains requirements for project virtual environment. Mlflow creates venv on its own with given requirements file and run whole multistep flow within it.
  
 
 Notes
@@ -76,3 +76,7 @@ Notes
 
 * Files placed in flow_steps directory use relative imports due to Mlflow execution logic.
 * PoC is based on mlflow/examples/multistep_workflow exmaple from mlflow repository.
+
+Interesting and useful resources
+----
+*   [bleble](asd)

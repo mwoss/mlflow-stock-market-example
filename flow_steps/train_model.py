@@ -14,7 +14,8 @@ from mlflow.utils.file_utils import TempDir
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 
-from constants import TRAIN_ROWS_METRIC, TEST_ROWS_METRIC, RMS_METRIC, MODEL_ARTIFACT_NAME, MODEL_ARTIFACT_PATH
+from constants import (TRAIN_ROWS_METRIC, TEST_ROWS_METRIC, RMS_METRIC, MODEL_ARTIFACT_NAME, MODEL_ARTIFACT_PATH,
+                       STOCK_MODEL_PATHS)
 
 
 class MLflowLogger(Callback):
@@ -62,7 +63,7 @@ class MLflowLogger(Callback):
         :param artifact_path: Run-relative artifact path this model is to be saved to.
         """
         with TempDir() as tmp:
-            data_path = tmp.path("image_model")
+            data_path = tmp.path(STOCK_MODEL_PATHS)
             if not path.exists(data_path):
                 mkdir(data_path)
 
@@ -112,7 +113,7 @@ def train_model(stock_data, lstm_units):
     scalar = MinMaxScaler(feature_range=(0, 1))
     scaled_data = scalar.fit_transform(lstm_data)
 
-    with mlflow.start_run():
+    with mlflow.start_run(run_name="train"):
         train_data, test_data = train_test_split(lstm_data, test_size=0.2, shuffle=False)
         left_train_bound = int(len(train_data) * 0.25)
 
