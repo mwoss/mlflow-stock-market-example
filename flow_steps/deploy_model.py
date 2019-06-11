@@ -12,10 +12,7 @@ from constants import ML_MODEL_NAME, H5_MODEL_NAME
 @click.option("--bucket-name", type=str)
 def deploy_model(model_dir: str, bucket_name: str):
     with mlflow.start_run(run_name="deploy"):
-        s3 = boto3.client("s3",
-                          aws_access_key_id="AKIAIP7CJ7NG2LXDCV2A",
-                          aws_secret_access_key="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"
-                          )
+        s3 = boto3.client("s3")
         s3.create_bucket(Bucket=bucket_name)
 
         ml_model_dir = path.join(model_dir, ML_MODEL_NAME)
