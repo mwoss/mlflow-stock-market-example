@@ -4,11 +4,11 @@ QUANLD_API = "https://www.quandl.com/api/v3/datasets/WIKI"
 TRAIN_ROWS_METRIC = "training_nrows"
 TEST_ROWS_METRIC = "test_nrows"
 RMS_METRIC = "train_rms"
-LOSS_METRIC = "train_loss"
 
 # ARTIFACTS
 DATASET_ARTIFACT_DIR = "dataset-stock-dir"
 TRANSFORMED_ARTIFACT_DIR = "transformed-dataset-dir"
+MODEL_ARTIFACT_PATH = "models"
 MODEL_ARTIFACT_NAME = "keras-model"
 
 # FILENAMES

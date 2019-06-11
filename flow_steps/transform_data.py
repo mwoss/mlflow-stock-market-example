@@ -28,7 +28,7 @@ def transform_data(dataset_stock_csv, max_row_limit):
         transformed_dataset_dir = path.join(tmpdir, "stock-dataset")
 
         if not path.exists(transformed_dataset_dir):
-            # workaround
+            # workaround, without additional folder, mlflow is not able to log transformed csv
             mkdir(transformed_dataset_dir)
 
         print(f"Converting stock market data CSV {dataset_stock_csv}. Output: {transformed_dataset_dir}")
