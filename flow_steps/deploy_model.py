@@ -11,6 +11,10 @@ from constants import ML_MODEL_NAME, H5_MODEL_NAME
 @click.option("--model-dir", type=str)
 @click.option("--bucket-name", type=str)
 def deploy_model(model_dir: str, bucket_name: str):
+    """
+    This step is optional and can be removed from mlproject step.
+    You can set MLFLOW_TRACKING_URI in order to log metrics/artifacts to remote servers/dbs
+    """
     with mlflow.start_run(run_name="deploy"):
         s3 = boto3.client("s3")
         s3.create_bucket(Bucket=bucket_name)
