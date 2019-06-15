@@ -92,6 +92,7 @@ Beyond example
 ----
 In `additional_examples` directory I cover cool functionalities beyond this simple multistep pipeline.
 * `experiments_management.py` - short demonstration of MlflowClient's capabilities
+* `rest_api.py` - simple REST API example, useful for services written in different languages
 
 Notes
 ----
